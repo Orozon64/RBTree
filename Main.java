@@ -90,8 +90,14 @@ class RBTree{
         }
         if(is_found){
             nodes_in_tree.remove(found_position);
+            for(int i = 0; i < nodes_in_tree.size(); i++){
+                Node current_node = nodes_in_tree.get(i);
+                if(current_node.key_of_parent == key){
+                    remove(current_node.key);
+                }
+            }//jeśli usuwamy rodzica, trzeba usunąć też jego dzieci.
             return found_position;
-            //jeśli usuwamy rodzica, trzeba usunąć też jego dzieci.
+
         }
         else{
 
