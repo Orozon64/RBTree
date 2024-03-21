@@ -42,6 +42,10 @@ class RBTree{
                     lastnode.rightchild = newnode;
                     newnode.parent = lastnode;
                     inserted = true;
+                    Node.Color parent_color = lastnode.color;
+                    if(parent_color == Node.Color.RED){
+                        newnode.color = Node.Color.BLACK;
+                    }
                 }
                 else if(lastnode.value < value && lastnode.rightchild != null){
                     lastnode = lastnode.rightchild;
@@ -50,6 +54,10 @@ class RBTree{
                     lastnode.leftchild = newnode;
                     newnode.parent = lastnode;
                     inserted = true;
+                    Node.Color parent_color = lastnode.color;
+                    if(parent_color == Node.Color.RED){
+                        newnode.color = Node.Color.BLACK;
+                    }
                 }
                 else if(lastnode.value > value && lastnode.leftchild != null){
                     lastnode = lastnode.leftchild;
@@ -100,7 +108,7 @@ class RBTree{
     }
     int remove(int key){
         Node currentNode = root;
-        
+
         boolean removed = false;
         while (!removed){
             if(currentNode.key == key){
@@ -158,9 +166,7 @@ class RBTree{
                 last_layer++;
                 currentNode = currentNode.rightchild;
             }
-            else{
-                //jak uniknąć fałszwych wyników?
-            }
+
         }
         return last_layer;
     }
