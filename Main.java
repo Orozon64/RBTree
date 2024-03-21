@@ -60,7 +60,7 @@ class RBTree{
         }
         Node new_node = new Node(insert_col, key, value, layer_of_new_node, parent_key, xpos);
         nodes_in_tree.add(new_node);
-        System.out.println("Wstawiono nowy węzeł o kolorze " + insert_col + " kluczu: " + key + " wartości " + value + " warstwie " + " kluczu rodzica " + " i pozycji lewo-prawo " + xpos);
+        System.out.println("Wstawiono nowy węzeł o kolorze " + insert_col + " kluczu: " + key + " wartości " + value + " warstwie " + layer_of_new_node + " kluczu rodzica " + parent_key + " i pozycji lewo-prawo " + xpos);
     }
     int get(int key){
 
