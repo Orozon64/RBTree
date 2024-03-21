@@ -21,7 +21,7 @@ class Node{
 
     int key;
     int value;
-    Node right, left, parent;
+    Node rightchild, leftchild, parent;
 
     enum Color {RED, BLACK}
 
@@ -40,25 +40,52 @@ class Node{
 class RBTree{
 
     Node root;
+    Node lastnode;
     void insert(int key, int value){
         if(root == null){
-            root = new Node(Node.Color.BLACK , key, value);
+            root = new Node(Node.Color.BLACK, key, value);
+        }
+        else{
+            
+            newnode = new Node(Node.Color.RED, key, value); //przy wstawianiu zawsze ustawiamy kolor na czerwony, potem poprawimy
+            lastnode = root;
+            if(lastnode.value < value && lastnode.rightchild == null){
+                lastnode.rightchild = newnode;
+            }
+            else if(lastnode.value < value && lastnode.rightchild != null){
+                lastnode = lastnode.rightchild;
+            }
+            else if(){
+                lastnode.leftchild = newnode;
+            }
         }
 
     }
-    int get(int key){
-
-
-        int found_value = -1;
-
-        for (Node current_node : nodes_in_tree) {
-            if (key == current_node.key) {
-
-                found_value = current_node.value;
-
+   int get(int key){
+        Node currentNode = root;
+        while (currentNode != null){
+            if(currentNode.key == key){
+                return curNode.value;
+                break;
+            }
+            else if(key < currentNode.key){
+                if(currentNode.leftchild != null){
+                    currentNode = currentNode.leftchild;
+                }
+                else{
+                    return -1;
+                    break;
+                }
+            }
+            else{
+                if(currentNode.rightchild != null){
+                    currentNode = currentNode.rightchild;
+                }
+                else{
+                    return -1;
+                }
             }
         }
-        return found_value;
     }
     int remove(int key){
         boolean is_found = false;
