@@ -1,66 +1,50 @@
-package com.company;
-
+// Online Java Compiler
+// Use this editor to write, compile and run your Java code online
 import java.util.ArrayList;
 import java.util.Random;
 
+class HelloWorld {
+    public static void main(String[] args) {
+        RBTree new_tree = new RBTree();
+        new_tree.insert(0, 5, -1);
+        new_tree.insert(1, 8, 0);
+        new_tree.insert(2, 3, 0);
+        int get_value = new_tree.get(2);
+        System.out.println(get_value);
+        int height_val = new_tree.height();
+        System.out.println(height_val);
+        int remove_val = new_tree.remove(1);
+        System.out.println(remove_val);
+    }
+}
 class Node{
-    String color;
+
     int key;
     int value;
-    int key_of_parent;
-    int layer_in_tree; //o 1 większe od layer_in_tree rodzica. metoda height zwróci największą wartość.
-    int x_position; //pozycja lewo-prawo. jeśli rodzic ma już dzieci, porównujemy wartość value "rodzeństwa". jeśli jest większa od wartości tego węzła, przerzucamy na lewo, w innym przypadku - na prawo.
-    public Node(String col, int k, int v, int l, int pk, int xpos){
-        color = col;
+    Node right, left, parent;
+
+    enum Color {RED, BLACK}
+
+    Color color;
+
+    
+    
+    public Node(Color c, int k, int v{
+        color = c;
         key = k;
         value = v;
-        layer_in_tree = l;
-        key_of_parent = pk;
-        x_position = xpos;
+        
     }
 
 }
 class RBTree{
 
-
-    Random rand = new Random();
-    ArrayList<Node> nodes_in_tree = new ArrayList <Node>();
-    void insert(int key, int value, int parent_key){
-        String insert_col = "";
-        int xpos = 0;
-        int layer_of_new_node = 1;
-        if(parent_key == -1){ //jeśli wartość parent_key to -1, uznajmy, że tworzymy root drzewa.
-            insert_col = "black";
+    Node root;
+    void insert(int key, int value){
+        if(root == null){
+            root = new Node(Node.Color.BLACK , key, value);
         }
-        else{
-            for (Node loopNode : nodes_in_tree) {
-                if (loopNode.key == parent_key) {
-                    if (loopNode.color.equals("red")) {
-                        insert_col = "black";
-                    } else {
-                        int color_decider = rand.nextInt(2); //jeśli rodzicem jest obiekt czarny, dziecko może być czerwone lub czarne, więc możemy to wylosować.
-                        switch (color_decider) {
-                            case 0:
-                                insert_col = "red";
-                                break;
-                            default:
-                                insert_col = "black";
-                                break;
-                        }
-                    }
-                    layer_of_new_node = loopNode.layer_in_tree + 1;
-                    if (value < loopNode.value) {
-                        xpos = loopNode.x_position - 1;
-                    } else {
-                        xpos = loopNode.x_position + 1;
-                    }
-                }
 
-            }
-        }
-        Node new_node = new Node(insert_col, key, value, layer_of_new_node, parent_key, xpos);
-        nodes_in_tree.add(new_node);
-        System.out.println("Wstawiono nowy węzeł o kolorze " + insert_col + " kluczu: " + key + " wartości " + value + " warstwie " + layer_of_new_node + " kluczu rodzica " + parent_key + " i pozycji lewo-prawo " + xpos);
     }
     int get(int key){
 
@@ -98,7 +82,7 @@ class RBTree{
                 if(current_node.key_of_parent == key){
                     nodes_in_tree.remove(i);
                 }
-            }//jeśli usuwamy rodzica, trzeba usunąć też jego dzieci.
+            }
             return value_to_return;
 
         }
@@ -118,11 +102,4 @@ class RBTree{
         return last_layer;
     }
 
-}
-public class Main {
-
-    public static void main(String[] args) {
-        RBTree new_tree = new RBTree();
-        new_tree.insert(0, 5, -1);
-    }
 }
