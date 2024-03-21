@@ -42,6 +42,7 @@ class RBTree{
     Node root;
     Node lastnode;
     void insert(int key, int value){
+        boolean inserted = false;
         if(root == null){
             root = new Node(Node.Color.BLACK, key, value);
         }
@@ -49,15 +50,21 @@ class RBTree{
             
             newnode = new Node(Node.Color.RED, key, value); //przy wstawianiu zawsze ustawiamy kolor na czerwony, potem poprawimy
             lastnode = root;
+        while(!inserted){
             if(lastnode.value < value && lastnode.rightchild == null){
                 lastnode.rightchild = newnode;
             }
             else if(lastnode.value < value && lastnode.rightchild != null){
                 lastnode = lastnode.rightchild;
             }
-            else if(){
+            else if(lastnode.value > value && lastnode.leftchild == null){
                 lastnode.leftchild = newnode;
             }
+            else if(lastnode.value > value && lastnode.leftchild != null){
+                lastnode = lastnode.leftchild;
+            }
+        }    
+            
         }
 
     }
