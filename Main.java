@@ -100,10 +100,13 @@ class RBTree{
     }
     int remove(int key){
         Node currentNode = root;
+        
         boolean removed = false;
         while (!removed){
             if(currentNode.key == key){
+
                 transplant(currentNode, currentNode.rightchild);
+
             }
             else if(key < currentNode.key){
                 if(currentNode.leftchild != null){
