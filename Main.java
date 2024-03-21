@@ -40,6 +40,7 @@ class RBTree{
             while(!inserted){
                 if(lastnode.value < value && lastnode.rightchild == null){
                     lastnode.rightchild = newnode;
+                    newnode.parent = lastnode;
                     inserted = true;
                 }
                 else if(lastnode.value < value && lastnode.rightchild != null){
@@ -47,6 +48,7 @@ class RBTree{
                 }
                 else if(lastnode.value > value && lastnode.leftchild == null){
                     lastnode.leftchild = newnode;
+                    newnode.parent = lastnode;
                     inserted = true;
                 }
                 else if(lastnode.value > value && lastnode.leftchild != null){
@@ -55,6 +57,7 @@ class RBTree{
                 else if(lastnode.value == value){
                     if(lastnode.leftchild == null){ //wartości równe będziemy wstawiać po lewej
                         lastnode.leftchild = newnode;
+                        newnode.parent = lastnode;
                         inserted = true;
                     }
                     else{
@@ -97,7 +100,41 @@ class RBTree{
     }
     int remove(int key){
         Node currentNode = root;
-        if()
+        boolean removed = false;
+        while (!removed){
+            if(currentNode.key == key){
+                transplant(currentNode, currentNode.rightchild);
+            }
+            else if(key < currentNode.key){
+                if(currentNode.leftchild != null){
+                    currentNode = currentNode.leftchild;
+                }
+                else{
+                    return -1;
+
+                }
+            }
+            else{
+                if(currentNode.rightchild != null){
+                    currentNode = currentNode.rightchild;
+                }
+                else{
+                    return -1;
+                }
+            }
+        }
+    }
+    void transplant(Node u, Node v){
+        if(u.parent == null){
+            root = v;
+        }
+        else if(u ==  u.parent.leftchild){
+            u.parent.leftchild = v;
+        }
+        else{
+            u.parent.rightchild = v;
+        }
+        v.parent = u.parent;
     }
 
     int height(){
