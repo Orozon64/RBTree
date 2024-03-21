@@ -28,7 +28,7 @@ class RBTree{
     void insert(int key, int value, int parent_key){
         String insert_col = "";
         int xpos = 0;
-        int layer_of_new_node = 0;
+        int layer_of_new_node = 1;
         if(parent_key == -1){ //jeśli wartość parent_key to -1, uznajmy, że tworzymy root drzewa.
             insert_col = "black";
         }
