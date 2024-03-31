@@ -77,6 +77,11 @@ class RBTree{
         }
 
     }
+    void fixcolors(){ //ta funkcja sprawdza, czy ścieżki od węzła do pustych dzieci mają po tyle samo czarnych węzłów
+        lastnode = root;
+        int number_of_black_nodes = 0;
+
+    }
     int get(int key){
         Node currentNode = root;
         int found_value = 0;
@@ -108,12 +113,40 @@ class RBTree{
     }
     int remove(int key){
         Node currentNode = root;
-
+        Node.Color original_color;
+        Node eqChildRemovalNode;
         boolean removed = false;
+        boolean foundrcsmallest = false;
         while (!removed){
-            if(currentNode.key == key){
+            if(currentNode.key == key){ //gdy znaleźliśmy już węzeł do usunięcia
+                if(currentNode.leftchild == null){
+                    original_color = currentNode.color;
+                    transplant(currentNode, currentNode.rightchild);
+                    //później wywołamy tutaj "delete_fixup"
+                    removed = true;
+                }
+                else if (currentNode.rightchild == null) {
+                    original_color = currentNode.color;
+                    transplant(currentNode, currentNode.leftchild);
+                    //później wywołamy tutaj "delete_fixup"
+                    removed = true;
+                }
+                else{
+                    eqChildRemovalNode = currentNode.rightchild;
+                    while (!foundrcsmallest){
+                        if (eqChildRemovalNode.leftchild == null){
+                            original_color = eqChildRemovalNode.color;
+                            transplant(eqChildRemovalNode, eqChildRemovalNode.rightchild);
+                            foundrcsmallest = true;
+                        }
+                        else{
+                            eqChildRemovalNode = eqChildRemovalNode.leftchild;
+                        }
+                    }
+                    original_color = currentNode.color;
 
-                transplant(currentNode, currentNode.rightchild);
+                }
+
 
             }
             else if(key < currentNode.key){
@@ -135,7 +168,7 @@ class RBTree{
             }
         }
     }
-    void transplant(Node u, Node v){
+    void transplant(Node u, Node v){ //u - węzeł, który usuwamy, v - węzeł, którym zastąpimy usunięty węzeł.
         if(u.parent == null){
             root = v;
         }
