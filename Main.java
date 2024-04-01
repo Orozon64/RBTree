@@ -114,37 +114,48 @@ class RBTree{
     int remove(int key){
         Node currentNode = root;
         Node.Color original_color;
-        Node eqChildRemovalNode;
+        Node x;
+        Node y;
         boolean removed = false;
         boolean foundrcsmallest = false;
         while (!removed){
             if(currentNode.key == key){ //gdy znaleźliśmy już węzeł do usunięcia
                 if(currentNode.leftchild == null){
                     original_color = currentNode.color;
-                    transplant(currentNode, currentNode.rightchild);
-                    //później wywołamy tutaj "delete_fixup"
+                    x = currentNode.rightchild;
+                    transplant(currentNode, x);
+                    delete_fixup(x);
                     removed = true;
                 }
                 else if (currentNode.rightchild == null) {
                     original_color = currentNode.color;
-                    transplant(currentNode, currentNode.leftchild);
-                    //później wywołamy tutaj "delete_fixup"
+                    x = currentNode.leftchild;
+                    transplant(currentNode, x);
+                    delete_fixup(x);
                     removed = true;
                 }
                 else{
-                    eqChildRemovalNode = currentNode.rightchild;
+                    y = currentNode.rightchild;
                     while (!foundrcsmallest){
-                        if (eqChildRemovalNode.leftchild == null){
-                            original_color = eqChildRemovalNode.color;
-                            transplant(eqChildRemovalNode, eqChildRemovalNode.rightchild);
-                            foundrcsmallest = true;
+                        if (y.leftchild == null){
+                            original_color = y.color;
+                            x = y.rightchild;
+                            transplant(y, x);
+                            y.rightchild = x.parent;
+                            x.parent.parent = y;
+                            transplant(currentNode, y);
+                            currentNode.rightchild.parent = y;
+                            currentNode.leftchild.parent = y;
+
+                            foundrcsmallest = true; //keep this at the bottom
+
                         }
                         else{
-                            eqChildRemovalNode = eqChildRemovalNode.leftchild;
+                            y = y.leftchild;
                         }
                     }
-                    original_color = currentNode.color;
 
+                    removed = true;
                 }
 
 
@@ -180,7 +191,30 @@ class RBTree{
         }
         v.parent = u.parent;
     }
+    void delete_fixup(Node x_fix){
+        Node w;
+        if(x_fix == x_fix.parent.leftchild){
+            w = x_fix.parent.rightchild;
+        }
+        else {
+            w = x_fix.parent.leftchild;
+        }
+        if(w.color == Node.Color.RED){
+            w.color = Node.Color.BLACK;
 
+        }
+    }
+    void left_rotate(Node rnode){
+        Node former_child = rnode.rightchild;
+        rnode.parent = former_child;
+        rnode.rightchild = former_child.leftchild;
+    }
+    void right_rotate(Node rnode){
+        Node former_parent = rnode.parent;
+        Node former_rc = rnode.rightchild;
+        former_parent.leftchild = former_rc;
+        rnode.rightchild = former_parent;
+    }
     int height(){
         int last_layer = 1;
         Node currentNode = root;
