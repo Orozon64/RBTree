@@ -193,27 +193,94 @@ class RBTree{
     }
     void delete_fixup(Node x_fix){
         Node w;
+        boolean isright = false;
+        boolean isleft = false;
         if(x_fix == x_fix.parent.leftchild){
             w = x_fix.parent.rightchild;
+            isright = true;
         }
         else {
             w = x_fix.parent.leftchild;
+            isleft = true;
         }
-        if(w.color == Node.Color.RED){
-            w.color = Node.Color.BLACK;
+        while(x_fix != root && x_fix.color == Node.Color.BLACK){
+            if(w.color == Node.Color.RED){
+                w.color = Node.Color.BLACK;
+                x_fix.color = Node.Color.RED;
+                left_rotate(x_fix.parent);
+                if(isleft){
+                    w = x_fix.parent.leftchild;
+                }
+                if(isright){
+                    w = x_fix.parent.rightchild;
+                }
 
+            }
+            if (w.leftchild.color == Node.Color.BLACK && w.rightchild.color == Node.Color.BLACK) {
+                w.color = Node.Color.RED;
+                x_fix = x_fix.parent;
+            }
+            else {
+                if (w.rightchild.color == Node.Color.BLACK) {
+                    w.leftchild.color = Node.Color.BLACK;
+                    w.color = Node.Color.RED;
+                    right_rotate(w);
+                    if(isleft){
+                        w = x_fix.parent.leftchild;
+                    }
+                    if(isright){
+                        w = x_fix.parent.rightchild;
+                    }
+                }
+
+                    w.color = x_fix.parent.color;
+                    x_fix.parent.color = Node.Color.BLACK;
+                    w.rightchild.color = Node.Color.BLACK;
+                    left_rotate(x_fix.parent);
+                    x_fix = root;
+
+            }
         }
+        x_fix.color = Node.Color.BLACK;
     }
     void left_rotate(Node rnode){
-        Node former_child = rnode.rightchild;
-        rnode.parent = former_child;
-        rnode.rightchild = former_child.leftchild;
+        Node y = rnode.rightchild;
+        rnode.rightchild = y.leftchild;
+        if(y.leftchild != null){
+            y.leftchild.parent = rnode;
+        }
+        y.parent = rnode.parent;
+        if(rnode.parent == null){
+            root = y;
+        }
+        else if(rnode == rnode.parent.leftchild){
+            rnode.parent.leftchild = y;
+        }
+        else{
+            rnode.parent.rightchild = y;
+        }
+        y.leftchild = rnode;
+        rnode.parent = y;
     }
+
     void right_rotate(Node rnode){
-        Node former_parent = rnode.parent;
-        Node former_rc = rnode.rightchild;
-        former_parent.leftchild = former_rc;
-        rnode.rightchild = former_parent;
+        Node y = rnode.leftchild;
+        rnode.leftchild = y.rightchild;
+        if(y.rightchild != null){
+            y.rightchild.parent = rnode;
+        }
+        y.parent = rnode.parent;
+        if(rnode.parent == null){
+            root = y;
+        }
+        else if(rnode == rnode.parent.rightchild){
+            rnode.parent.rightchild = y;
+        }
+        else{
+            rnode.parent.rightchild = y;
+        }
+        y.rightchild = rnode;
+        rnode.parent = y;
     }
     int height(){
         int last_layer = 1;
