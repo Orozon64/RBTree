@@ -41,11 +41,9 @@ class RBTree{
                 if(lastnode.value < value && lastnode.rightchild == null){
                     lastnode.rightchild = newnode;
                     newnode.parent = lastnode;
+                    insert_fixup(newnode);
                     inserted = true;
-                    Node.Color parent_color = lastnode.color;
-                    if(parent_color == Node.Color.RED){
-                        newnode.color = Node.Color.BLACK;
-                    }
+
                 }
                 else if(lastnode.value < value && lastnode.rightchild != null){
                     lastnode = lastnode.rightchild;
@@ -53,11 +51,10 @@ class RBTree{
                 else if(lastnode.value > value && lastnode.leftchild == null){
                     lastnode.leftchild = newnode;
                     newnode.parent = lastnode;
+                    insert_fixup(newnode);
                     inserted = true;
-                    Node.Color parent_color = lastnode.color;
-                    if(parent_color == Node.Color.RED){
-                        newnode.color = Node.Color.BLACK;
-                    }
+
+
                 }
                 else if(lastnode.value > value && lastnode.leftchild != null){
                     lastnode = lastnode.leftchild;
@@ -66,6 +63,7 @@ class RBTree{
                     if(lastnode.leftchild == null){ //wartości równe będziemy wstawiać po lewej
                         lastnode.leftchild = newnode;
                         newnode.parent = lastnode;
+                        insert_fixup(newnode);
                         inserted = true;
                     }
                     else{
@@ -77,14 +75,36 @@ class RBTree{
         }
 
     }
-    void insert_fixup(Node x){
+    void insert_fixup(Node x){ //should call ONLY in case of a problem.
         Node uncle = get_uncle(x);
         if(uncle.color == Node.Color.RED){
             recolor(uncle);
             recolor(x.parent);
             recolor(x.parent.parent);
         }
-        else if(ncle.color == Node.Color.RED && )
+        else{
+            if((x == x.parent.leftchild && x.parent == x.parent.parent.rightchild) || (x == x.parent.rightchild && x.parent == x.parent.parent.leftchild)){
+                if(x == x.parent.leftchild){
+                    right_rotate(x.parent);
+                }
+                else{
+                    left_rotate(x.parent);
+                }
+            }
+            else{
+                Node par = x.parent;
+                Node g_par = x.parent.parent;
+
+                if(x == x.parent.leftchild){
+                    right_rotate(g_par);
+                }
+                else{
+                    left_rotate(g_par);
+                }
+                recolor(par);
+                recolor(g_par);
+            }
+        }
 
     }
     Node get_uncle(Node x){
