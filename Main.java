@@ -77,10 +77,31 @@ class RBTree{
         }
 
     }
-    void fixcolors(){ //ta funkcja sprawdza, czy ścieżki od węzła do pustych dzieci mają po tyle samo czarnych węzłów
-        lastnode = root;
-        int number_of_black_nodes = 0;
+    void insert_fixup(Node x){
+        Node uncle = get_uncle(x);
+        if(uncle.color == Node.Color.RED){
+            recolor(uncle);
+            recolor(x.parent);
+            recolor(x.parent.parent);
+        }
+        else if(ncle.color == Node.Color.RED && )
 
+    }
+    Node get_uncle(Node x){
+        if(x.parent == x.parent.parent.leftchild){
+            return x.parent.parent.rightchild;
+        }
+        else {
+            return x.parent.parent.leftchild;
+        }
+    }
+    void recolor(Node z){
+        if(z.color == Node.Color.BLACK){
+            z.color = Node.Color.RED;
+        }
+        else {
+            z.color = Node.Color.BLACK;
+        }
     }
     int get(int key){
         Node currentNode = root;
@@ -118,8 +139,10 @@ class RBTree{
         Node y;
         boolean removed = false;
         boolean foundrcsmallest = false;
+        int val_to_return = -1;
         while (!removed){
             if(currentNode.key == key){ //gdy znaleźliśmy już węzeł do usunięcia
+                val_to_return = currentNode.value;
                 if(currentNode.leftchild == null){
                     original_color = currentNode.color;
                     x = currentNode.rightchild;
@@ -178,6 +201,7 @@ class RBTree{
                 }
             }
         }
+        return val_to_return;
     }
     void transplant(Node u, Node v){ //u - węzeł, który usuwamy, v - węzeł, którym zastąpimy usunięty węzeł.
         if(u.parent == null){
