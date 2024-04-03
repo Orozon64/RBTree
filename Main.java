@@ -1,7 +1,7 @@
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        insert(0, 8);
     }
 }
 class Node{
@@ -76,11 +76,13 @@ class RBTree{
 
     }
     void insert_fixup(Node x){ //should call ONLY in case of a problem.
+    
         Node uncle = get_uncle(x);
         if(uncle.color == Node.Color.RED){
-            recolor(uncle);
-            recolor(x.parent);
-            recolor(x.parent.parent);
+            uncle.color = Node.Color.BLACK;
+            x.parent.color = Node.Color.BLACK;
+            x.parent.parent.color = Node.Color.RED;
+            insert_fixup(x.parent.parent);
         }
         else{
             if((x == x.parent.leftchild && x.parent == x.parent.parent.rightchild) || (x == x.parent.rightchild && x.parent == x.parent.parent.leftchild)){
