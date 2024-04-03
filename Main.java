@@ -1,7 +1,8 @@
 public class Main {
 
     public static void main(String[] args) {
-        insert(0, 8);
+        RBTree rbTree = new RBTree();
+        rbTree.insert(0, 8);
     }
 }
 class Node{
@@ -76,37 +77,45 @@ class RBTree{
 
     }
     void insert_fixup(Node x){ //should call ONLY in case of a problem.
-    
-        Node uncle = get_uncle(x);
-        if(uncle.color == Node.Color.RED){
-            uncle.color = Node.Color.BLACK;
-            x.parent.color = Node.Color.BLACK;
-            x.parent.parent.color = Node.Color.RED;
-            insert_fixup(x.parent.parent);
-        }
-        else{
-            if((x == x.parent.leftchild && x.parent == x.parent.parent.rightchild) || (x == x.parent.rightchild && x.parent == x.parent.parent.leftchild)){
-                if(x == x.parent.leftchild){
-                    right_rotate(x.parent);
-                }
-                else{
-                    left_rotate(x.parent);
-                }
-            }
-            else{
-                Node par = x.parent;
-                Node g_par = x.parent.parent;
 
-                if(x == x.parent.leftchild){
-                    right_rotate(g_par);
+        Node uncle = get_uncle(x);
+        if(root == x){
+            x.color = Node.Color.BLACK;
+        }
+        else {
+            if(x.parent.color != Node.Color.BLACK){
+                if(uncle.color == Node.Color.RED){
+                    uncle.color = Node.Color.BLACK;
+                    x.parent.color = Node.Color.BLACK;
+                    x.parent.parent.color = Node.Color.RED;
+                    insert_fixup(x.parent.parent);
                 }
                 else{
-                    left_rotate(g_par);
+                    if((x == x.parent.leftchild && x.parent == x.parent.parent.rightchild) || (x == x.parent.rightchild && x.parent == x.parent.parent.leftchild)){
+                        if(x == x.parent.leftchild){
+                            right_rotate(x.parent);
+                        }
+                        else{
+                            left_rotate(x.parent);
+                        }
+                    }
+                    else{
+                        Node par = x.parent;
+                        Node g_par = x.parent.parent;
+
+                        if(x == x.parent.leftchild){
+                            right_rotate(g_par);
+                        }
+                        else{
+                            left_rotate(g_par);
+                        }
+                        recolor(par);
+                        recolor(g_par);
+                    }
                 }
-                recolor(par);
-                recolor(g_par);
             }
         }
+
 
     }
     Node get_uncle(Node x){
@@ -279,11 +288,11 @@ class RBTree{
                     }
                 }
 
-                    w.color = x_fix.parent.color;
-                    x_fix.parent.color = Node.Color.BLACK;
-                    w.rightchild.color = Node.Color.BLACK;
-                    left_rotate(x_fix.parent);
-                    x_fix = root;
+                w.color = x_fix.parent.color;
+                x_fix.parent.color = Node.Color.BLACK;
+                w.rightchild.color = Node.Color.BLACK;
+                left_rotate(x_fix.parent);
+                x_fix = root;
 
             }
         }
