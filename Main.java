@@ -76,7 +76,7 @@ class RBTree{
         }
 
     }
-    void insert_fixup(Node x){ //should call ONLY in case of a problem.
+    void insert_fixup(Node x){
 
         Node uncle = get_uncle(x);
         if(root == x){
@@ -93,10 +93,14 @@ class RBTree{
                 else{
                     if((x == x.parent.leftchild && x.parent == x.parent.parent.rightchild) || (x == x.parent.rightchild && x.parent == x.parent.parent.leftchild)){
                         if(x == x.parent.leftchild){
-                            right_rotate(x.parent);
+                            right_rotate(x.parent.parent);
+                            recolor(x.parent);
+                            recolor(x.parent.parent);
                         }
                         else{
-                            left_rotate(x.parent);
+                            left_rotate(x.parent.parent);
+                            recolor(x.parent);
+                            recolor(x.parent.parent);
                         }
                     }
                     else{
@@ -104,13 +108,21 @@ class RBTree{
                         Node g_par = x.parent.parent;
 
                         if(x == x.parent.leftchild){
-                            right_rotate(g_par);
+                            right_rotate(par);
+                            x = x.rightchild;
+                            left_rotate(x.parent.parent);
+                            recolor(x.parent);
+                            recolor(x.parent.parent);
                         }
                         else{
-                            left_rotate(g_par);
+                            left_rotate(par);
+                            x = x.leftchild;
+                            right_rotate(x.parent.parent);
+                            recolor(x.parent);
+                            recolor(x.parent.parent);
                         }
-                        recolor(par);
-                        recolor(g_par);
+
+
                     }
                 }
             }
