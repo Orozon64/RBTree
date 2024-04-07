@@ -177,8 +177,8 @@ class RBTree{
     }
     int remove(int key){
         Node currentNode = root;
-        Node.Color original_color;
-        Node x;
+        Node.Color original_color = Node.Color.BLACK;
+        Node x = currentNode;
         Node y;
         boolean removed = false;
         boolean foundrcsmallest = false;
@@ -207,18 +207,28 @@ class RBTree{
                             original_color = y.color;
                             x = y.rightchild;
                             transplant(y, x);
-                            y.rightchild = x.parent;
-                            x.parent.parent = y;
-                            transplant(currentNode, y);
-                            currentNode.rightchild.parent = y;
-                            currentNode.leftchild.parent = y;
+                            if(y.parent == currentNode){
+                                x.parent = currentNode;
+                            }
+                            else {
+                                transplant(y, y.rightchild);
+                                y.rightchild = currentNode.rightchild;
+                                y.rightchild.parent = y;
+                            }
 
+                            transplant(currentNode, y);
+                            y.leftchild = currentNode.leftchild;
+                            y.leftchild.parent = y;
+                            y.color = currentNode.color;
                             foundrcsmallest = true; //keep this at the bottom
 
                         }
                         else{
                             y = y.leftchild;
                         }
+                    }
+                    if (original_color == Node.Color.BLACK){
+                        delete_fixup(x);
                     }
 
                     removed = true;
@@ -273,7 +283,7 @@ class RBTree{
         while(x_fix != root && x_fix.color == Node.Color.BLACK){
             if(w.color == Node.Color.RED){
                 w.color = Node.Color.BLACK;
-                x_fix.color = Node.Color.RED;
+                x_fix.parent.color = Node.Color.RED;
                 left_rotate(x_fix.parent);
                 if(isleft){
                     w = x_fix.parent.leftchild;
